@@ -5,6 +5,9 @@ import com.lastminute.recruitment.domain.WikiPageRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Collection;
+
 
 public class InMemoryWikiPageRepository implements WikiPageRepository {
 
@@ -19,6 +22,17 @@ public class InMemoryWikiPageRepository implements WikiPageRepository {
         db.keySet().forEach(wikiPageKey ->
                 System.out.println(wikiPageKey + "->" + db.get(wikiPageKey))
         );
+    }
+
+    @Override
+    public Optional<WikiPage> getPageBySelfLink(String link) {
+        return db.values().parallelStream()
+                .filter(wikiPage -> wikiPage.selfLink().equals(link)).findFirst();
+    }
+
+    @Override
+    public Collection<WikiPage> getPages() {
+        return db.values();
     }
 
 }

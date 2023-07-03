@@ -1,12 +1,20 @@
 package com.lastminute.recruitment.client;
 
-import java.util.Objects;
+import com.lastminute.recruitment.domain.WikiClient;
+import com.lastminute.recruitment.domain.error.WikiPageNotFound;
 
-public class JsonWikiClient {
+import java.net.URL;
+import java.util.Optional;
 
-    public String readJson(String link) {
+public class JsonWikiClient implements WikiClient {
+
+    @Override
+    public String read(String link) {
         String name = link.replace("\"", "")
                 .replace("http://wikiscrapper.test/", "/wikiscrapper/") + ".json";
-        return Objects.requireNonNull(getClass().getResource(name)).getFile();
+
+        return Optional.ofNullable(getClass().getResource(name))
+                .map(URL::getFile)
+                .orElseThrow(WikiPageNotFound::new);
     }
 }
